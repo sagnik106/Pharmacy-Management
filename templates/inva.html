@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+</style>
+</head>
+<body>
+<table style="width:100%">
+  <caption>invoice</caption>
+  <tr>
+    <th>Customer Name</th>
+    <th>Prescription ID</th>
+    <th>Employee ID</th>
+    <th>Date</th>
+    <th>Price</th>
+  </tr>
+  {% for task in tasks %}
+    <tr>
+      <td>{{task[0]}}</td>
+      <td>{{task[1]}}</td>
+      <td>{{task[2]}}</td>
+      <td>{{task[3]}}</td>
+      <td>{{task[4]}}</td>
+    </tr>
+  {% endfor %}
+</table><br><br>
+<input type="submit" href="/admin" value="Submit">
+
+</body>
+</html>
