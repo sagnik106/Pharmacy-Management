@@ -54,19 +54,19 @@ def pharma():
 
 @app.route('/prescripa',methods=['POST','GET'])
 def prescripa():
-    if request.method=='POST':
-        cname=request.form[cname]
-        eid=request.form[eid]
-        pid = request.form[pid]
-        dname = request.form[dname]
-        quantity = request.form[quantity]
-        dose = request.form[dose]
-        price=request.form[price]
-        date=request.form[date]
-        cursor.execute(r"INSERT INTO PRESCRIPTION VALUES(%ld,%ld,%ld,'%s')" % (pid, quantity, dose, dname))
-        cursor.execute(r"INSERT INTO INVOICE VALUES('%s',%ld,%ld,'%s',%f)" % (cname, pid, eid, date, price))
+    if request.method == 'POST':
+        cname = request.form['Customer Name']
+        eid = request.form['Employee id']
+        pid = request.form['Prescription id']
+        dna = request.form['Drug Name']
+        quantity = request.form['Quantity']
+        dose = request.form['Dose']
+        price = request.form['Price']
+        date = request.form['Date']
+        cursor.execute("INSERT INTO PRESCRIPTION VALUES(%s,%s,%s,\'%s\')" % (pid, quantity, dose, dna))
+        cursor.execute("INSERT INTO INVOICE VALUES(\'%s\',%s,%s,\'%s\',%s)" % (cname, pid, eid, date, price))
+        cursor.execute(r"UPDATE STOCK SET QUANTITY=QUANTITY-%s WHERE D_NAME='%s'"%(quantity,dna))
         db.commit()
-        cursor.close()
         return redirect("/admin")
     else:
         return render_template('prescripa.html')
@@ -74,18 +74,18 @@ def prescripa():
 @app.route('/prescripp',methods=['POST','GET'])
 def prescripp():
     if request.method == 'POST':
-        cname = request.form[cname]
-        eid = request.form[eid]
-        pid = request.form[pid]
-        dname = request.form[dname]
-        quantity = request.form[quantity]
-        dose = request.form[dose]
-        price = request.form[price]
-        date = request.form[date]
-        cursor.execute("INSERT INTO PRESCRIPTION VALUES(%ld,%ld,%ld,\'%s\')" % (pid, quantity, dose, dname))
-        cursor.execute("INSERT INTO INVOICE VALUES(\'%s\',%ld,%ld,\'%s\',%f)" % (cname, pid, eid, date, price))
+        cname = request.form['Customer Name']
+        eid = request.form['Employee id']
+        pid = request.form['Prescription id']
+        dna = request.form['Drug Name']
+        quantity = request.form['Quantity']
+        dose = request.form['Dose']
+        price = request.form['Price']
+        date = request.form['Date']
+        cursor.execute(r"INSERT INTO PRESCRIPTION VALUES(%d,%d,%d,'%s')" % (pid, quantity, dose, dna))
+        cursor.execute(r"INSERT INTO INVOICE VALUES('%s',%d,%d,'%s',%f)" % (cname, pid, eid, date, price))
+        cursor.execute(r"UPDATE STOCK SET QUANTITY=QUANTITY-%s WHERE D_NAME='%s'"%(quantity,dna))
         db.commit()
-        cursor.close()
         return redirect("/pharmacist")
     else:
         return render_template('prescripp.html')
@@ -126,47 +126,46 @@ def empm():
     tasks=cursor.fetchall()
     return render_template('empm.html',tasks=tasks)
 
-@app.route('/upstockm/<int:cost>',methods=['POST','GET'])
+@app.route('/upstockm/<float:cost>',methods=['POST','GET'])
 def upstockm(cost):
+    cursor.execute('SELECT * FROM STOCK WHERE COST=%d'%cost)
+    tasks = cursor.fetchone()
     if request.method == 'POST':
-        num=request.form[num]
-        cursor.execute(r"UPDATE STOCK SET QUANTITY = %d WHERE COST = %d"%(num,cost))
+        num=request.form['quantity']
+        cursor.execute(r"UPDATE STOCK SET QUANTITY = %s WHERE COST = %f"%(num,cost))
         db.commit()
-        cursor.close()
         return redirect('/stockm')
     else:
-        return render_template('/upstockm')
+        return render_template('upstockm.html', tasks=tasks)
 
-@app.route('/upstocka/<int:cost>',methods=['POST','GET'])
+@app.route('/upstocka/<float:cost>',methods=['POST','GET'])
 def upstocka(cost):
+    cursor.execute('SELECT * FROM STOCK WHERE COST=%d' % cost)
+    tasks = cursor.fetchone()
     if request.method == 'POST':
-        num=request.form[num]
-        cursor.execute(r"UPDATE STOCK SET QUANTITY = %d WHERE COST = %d"%(num,cost))
+        num=request.form['quantity']
+        cursor.execute(r"UPDATE STOCK SET QUANTITY = %s WHERE COST = %f"%(num,cost))
         db.commit()
-        cursor.close()
         return redirect('/stocka')
     else:
-        return render_template('/upstocka')
+        return render_template('upstocka.html', tasks=tasks)
 
-@app.route('/delstockm/<int:cost>',methods=['POST','GET'])
+@app.route('/delstockm/<float:cost>',methods=['POST','GET'])
 def delstockm(cost):
     cursor.execute(r"DELETE FROM STOCK WHERE COST=%d"%(cost))
     db.commit()
-    cursor.close()
     return redirect('/stockm')
 
-@app.route('/delstocka/<int:cost>',methods=['POST','GET'])
+@app.route('/delstocka/<float:cost>',methods=['POST','GET'])
 def delstocka(cost):
     cursor.execute(r"DELETE FROM STOCK WHERE COST=%d"%(cost))
     db.commit()
-    cursor.close()
     return redirect('/stocka')
 
 @app.route('/delempm/<int:eid>', methods=['POST', 'GET'])
-def delempkm(eid):
-    cursor.execute(r"DELETE FROM STOCK WHERE EMP_ID=%d" % (eid))
+def delempm(eid):
+    cursor.execute(r"DELETE FROM EMPLOYEE WHERE EMP_ID=%d" % (eid))
     db.commit()
-    cursor.close()
     return redirect('/empm')
 
 
@@ -174,38 +173,35 @@ def delempkm(eid):
 def delempa(eid):
     cursor.execute(r"DELETE FROM EMPLOYEE WHERE EMP_ID=%d" % (eid))
     db.commit()
-    cursor.close()
     return redirect('/empa')
 
 @app.route('/addemp',methods=['POST','GET'])
 def addemp():
     if request.method == 'POST':
-        fname=request.form[fname]
-        lname=request.form[lname]
-        eid=request.form[eid]
-        mail=request.form[mail]
-        ph=request.form[ph]
-        dob=request.form[dob]
-        cursor.execute(r"INSERT INTO EMPLOYEE VALUES('%s','%s',%d,'%s','%s','%s')"%(fname,lname,eid,mail,ph,dob))
+        fname=request.form['fname']
+        lname=request.form['lname']
+        eid=request.form['eid']
+        mail=request.form['mail']
+        ph=request.form['ph']
+        dob=request.form['dob']
+        cursor.execute(r"INSERT INTO EMPLOYEE VALUES('%s','%s',%s,'%s','%s','%s')"%(fname,lname,eid,mail,ph,dob))
         db.commit()
-        cursor.close()
         return redirect('/empa')
     else:
-        return render_template('empform.html')
+        return render_template('addemp.html')
 
 @app.route('/addstock',methods=['POST','GET'])
 def addstock():
     if request.method == 'POST':
-        dname=request.form[dname]
-        quantity=request.form[quantity]
-        cost=request.form[cost]
-        sup=request.form[sup]
-        cursor.execute(r"INSERT INTO STOCK VALUES('%s',%d,%f,'%s')"%(dname,quantity,cost,sup))
+        dname=request.form['dname']
+        quantity=request.form['quantity']
+        cost=request.form['cost']
+        sup=request.form['sup']
+        cursor.execute(r"INSERT INTO STOCK VALUES('%s',%s,%s,'%s')"%(dname,quantity,cost,sup))
         db.commit()
-        cursor.close()
         return redirect('/stocka')
     else:
-        return render_template('stockform.html')
+        return render_template('addstock.html')
 
 if __name__== '__main__':
     app.run(debug=True)

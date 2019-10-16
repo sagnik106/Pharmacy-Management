@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color:#333;
+}
+li {
+  float: left;
+}
+li a {
+  display: block;
+  color:white;
+  text-align:left;
+  padding: 14px 16px;
+}
+li a:hover {
+  background-color: #111;
+}
+body {
+  background-color:white;
+  text-align:left;
+
+}
+h1{
+  color:black;
+}
+</style>
+</head>
+<body>
+
+<div id="container_demo" >
+	<!-- hidden anchor to stop jump http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
+	<a class="hiddenanchor" id="toregister"></a>
+	<a class="hiddenanchor" id="tologin"></a>
+	<div id="wrapper">
+		<div id="prescribtion" class="animate form">
+			<h1 style="background-color:rgba(255, 99, 71, 0.4)"></h1>
+			<h1 style="background-color:rgba(255, 99, 71, 0.4)">EMPLOYEE</h1>
+			<form  action="/addemp" method="post">
+
+				<p>
+                                        First Name:
+					<input id="fname" name="fname" required="required" type="text" placeholder="First Name"/>
+				</p>
+				<p>
+                                        Last Name:
+					<input id="lname" name="lname" required="required" type="text" placeholder="Last Name"/>
+				</p>
+				<p>
+                                        Employee ID:
+					<input id="eid" name="eid" required="required" type="number" placeholder="Employee ID"/>
+				</p>
+				<p>
+                                        e-Mail:
+					<input id="mail" name="mail" required="required" type="text" placeholder="e-Mail" />
+				</p>
+                                <p>
+                                        DOB:
+					<input id="dob" name="dob" required="required" type="text" placeholder="DOB" />
+				</p>
+                                <p>
+                                        Phone No:
+					<input id="ph" name="ph" required="required" type="number" placeholder="Phone No."/>
+				</p>
+				<p class="login button">
+					<input type="submit" value="submit" />
+				</p>
+			</form>
+
+</div>
+</body>
+</html>

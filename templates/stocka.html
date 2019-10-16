@@ -14,13 +14,13 @@ th, td {
 </head>
 <body>
 <table style="width:100%">
-  <caption>INVOICE</caption>
+  <caption>STOCK</caption>
   <tr>
-    <th>Customer Name</th>
-    <th>Prescription ID</th>
-    <th>Employee ID</th>
-    <th>Date</th>
-    <th>Price</th>
+    <th>Drug Name</th>
+    <th>Quantity</th>
+    <th>Cost</th>
+    <th>Supplier</th>
+    <th></th>
   </tr>
   {% for task in tasks %}
     <tr>
@@ -28,10 +28,11 @@ th, td {
       <td>{{task[1]}}</td>
       <td>{{task[2]}}</td>
       <td>{{task[3]}}</td>
-      <td>{{task[4]}}</td>
+      <td><button><a href="/delstocka/{{task[2]}}">Delete</a></button><br><button><a href="/upstocka/{{task[2]}}">Update</a></button></td>
     </tr>
   {% endfor %}
 </table><br><br>
+<button><a href="/addstock">Add Stock</a></button>
 <button><a href="/admin">Go Back</a></button>
 
 </body>
