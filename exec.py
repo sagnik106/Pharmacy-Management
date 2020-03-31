@@ -1,9 +1,9 @@
 from flask import Flask, render_template,request, redirect
-import mysql.connector
+#import mysql.connector
 
-db=mysql.connector.connect(user='root',passwd='toor')
-cursor=db.cursor(buffered=True)
-cursor.execute("USE PHARMACY_MANAGEMENT")
+#db=mysql.connector.connect(user='root',passwd='toor')
+#cursor=db.cursor(buffered=True)
+#cursor.execute("USE PHARMACY_MANAGEMENT")
 
 app=Flask(__name__)
 
@@ -82,8 +82,8 @@ def prescripp():
         dose = request.form['Dose']
         price = request.form['Price']
         date = request.form['Date']
-        cursor.execute(r"INSERT INTO PRESCRIPTION VALUES(%d,%d,%d,'%s')" % (pid, quantity, dose, dna))
-        cursor.execute(r"INSERT INTO INVOICE VALUES('%s',%d,%d,'%s',%f)" % (cname, pid, eid, date, price))
+        cursor.execute(r"INSERT INTO PRESCRIPTION VALUES(%s,%s,%s,'%s')" % (pid, quantity, dose, dna))
+        cursor.execute(r"INSERT INTO INVOICE VALUES('%s',%s,%s,'%s',%s)" % (cname, pid, eid, date, price))
         cursor.execute(r"UPDATE STOCK SET QUANTITY=QUANTITY-%s WHERE D_NAME='%s'"%(quantity,dna))
         db.commit()
         return redirect("/pharmacist")
